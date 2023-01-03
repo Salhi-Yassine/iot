@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+{#    <div hx-get="/data" hx-trigger="every 5s">#}
+
+
+        <table class="display table" style="width:100%" id="example">
+            <thead>
+            <tr>
+                <th>N</th>
+                <th>Température</th>
+                <th>Date:Heure</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for i in tab %}
+                <tr>
+                <td>{{ i.id }}</td>
+                <td>{{ i.temp }}</td>
+                <td>{{ i.dt }}</td>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+            <tr>
+                <th>N</th>
+                <th>Température</th>
+                <th>Date:Heure</th>
+            </tr>
+            </tfoot>
+        </table>
+{#    </div>#}
+{% endblock %}

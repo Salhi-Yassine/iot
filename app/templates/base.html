@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block title %}<title>IOT</title>{% endblock %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="https://cdn.datatables.net/searchpanes/2.1.0/css/searchPanes.dataTables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/select/1.5.0/css/select.dataTables.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.13.1/datatables.min.css"/>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.13.1/datatables.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/searchpanes/2.1.0/js/dataTables.searchPanes.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/select/1.5.0/js/dataTables.select.min.js"></script>
+    <script type="text/javascript" src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.7.0"></script>
+    <script>
+        $(document).ready(function () {
+            $('#example').DataTable({
+                dom: 'Pfrtip',
+            });
+            // Create the chart with initial data
+            var container = $('<div/>').insertBefore(table.table().container());
+
+            var chart = Highcharts.chart(container[0], {
+                chart: {
+                    type: 'pie',
+                },
+                title: {
+                    text: 'Staff Count Per Position',
+                },
+                series: [
+                    {
+                        data: chartData(table),
+                    },
+                ],
+            });
+
+            // On each draw, update the data in the chart
+            table.on('draw', function () {
+                chart.series[0].setData(chartData(table));
+            });
+        });
+
+        function chartData(table) {
+            var counts = {};
+
+            // Count the number of entries for each position
+            table
+                .column(1, {search: 'applied'})
+                .data()
+                .each(function (val) {
+                    if (counts[val]) {
+                        counts[val] += 1;
+                    } else {
+                        counts[val] = 1;
+                    }
+                });
+
+            // And map it to the format highcharts uses
+            return $.map(counts, function (val, key) {
+                return {
+                    name: key,
+                    y: val,
+                };
+            });
+        }
+    </script>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <!-- Container wrapper -->
+    <div class="container">
+        <!-- Navbar brand -->
+
+
+        <!-- Toggle button -->
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-mdb-toggle="collapse"
+                data-mdb-target="#navbarButtonsExample"
+                aria-controls="navbarButtonsExample"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+        >
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Collapsible wrapper -->
+        <div class="collapse navbar-collapse" id="navbarButtonsExample">
+            <!-- Left links -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/data">Log</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/charts">Chart</a>
+                </li>
+            </ul>
+            <!-- Left links -->
+
+            <div class="d-flex align-items-center">
+                <a href="/csv" class="btn btn-primary me-3">
+                    DOWNLOAD CSV FILE
+                </a>
+            </div>
+        </div>
+        <!-- Collapsible wrapper -->
+    </div>
+    <!-- Container wrapper -->
+</nav>
+<!-- Navbar -->
+<section class="vh-100">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+
+
+            <div class="card shadow-0 border border-dark border-5 text-dark" style="border-radius: 10px;">
+                <div class="card-body p-4">
+
+                    <div hx-get="/temp" hx-trigger="every 1s">
+                        <div class="row text-center">
+                            <div class="col-md-11 text-center border-5 border-dark py-4"
+                                 style="margin-top: -1.5rem; margin-bottom: -1.5rem;">
+                                <div class="d-flex justify-content-around mt-3">
+                                    <p class="small">--.--.----</p>
+                                </div>
+                                <div class="d-flex justify-content-around align-items-center py-5 my-4">
+
+                                    <p class="fw-bold mb-0" style="font-size: 7rem;">--.--°C🌡</p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<div class="container pt-5">
+
+    <div class="mt-4 p-5 rounded">
+        {% block content %}{% endblock %}
+    </div>
+</div>
+</body>
+</html>
