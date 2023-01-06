@@ -1,5 +1,7 @@
 # from django.shortcuts import render
 import csv
+import random
+
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
@@ -7,7 +9,8 @@ from .models import Temperature
 
 
 def home(request):
-    return HttpResponse('hello');
+    # Temperature.objects.all().delete()
+    return HttpResponse('hello')
 
 
 def dht(request):
@@ -39,6 +42,8 @@ def exp_csv(request):
 
 
 def temperature(request):
+    # f = round(random.uniform(5, 6), 2)
+    # Temperature.objects.create(temp=f)
     tab = Temperature.objects.latest('dt')
     # print(tab)
     s = {'last': tab}
