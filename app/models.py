@@ -39,7 +39,7 @@ class Temperature(models.Model):
                 'température dépasse la normale,' + str(self.temp),
                 'anomalie dans la machine',
                 settings.EMAIL_HOST_USER,
-                ['boy.yassine+iot@hotmail.com'],
+                ['your.email@hotmail.com'],
                 fail_silently=False,
             )
 
