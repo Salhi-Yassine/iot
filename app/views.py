@@ -9,7 +9,6 @@ from .models import Temperature
 
 
 def home(request):
-    # Temperature.objects.all().delete()
     return HttpResponse('hello')
 
 
@@ -42,8 +41,6 @@ def exp_csv(request):
 
 
 def temperature(request):
-    # f = round(random.uniform(5, 6), 2)
-    # Temperature.objects.create(temp=f)
     tab = Temperature.objects.latest('dt')
     # print(tab)
     s = {'last': tab}
